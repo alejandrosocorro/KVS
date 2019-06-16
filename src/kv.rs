@@ -1,5 +1,7 @@
+use std::path::PathBuf;
 use std::collections::HashMap;
 
+use crate::{KvsError, Result};
 /// The `KvStore` stores string key/value pairs.
 ///
 /// Key/value pairs are stored in a `HashMap` in memory and not persisted to disk.
@@ -18,6 +20,18 @@ pub struct KvStore {
 }
 
 impl KvStore {
+
+    // Opens a `KvStore` with the given path.
+    ///
+    /// Creates a new directory if the given one does not exist.
+    ///
+    /// # Errors
+    ///
+    /// It propagates I/O or deserialization errors during the log replay.
+    pub fn open(path: impl Into<PathBuf>) -> Result<KvStore> {
+        unimplemented!()
+    }
+
     /// Creates a `KvStore`.
     pub fn new() -> KvStore {
         KvStore {
@@ -28,19 +42,22 @@ impl KvStore {
     /// Sets the value of a string key to a string.
     ///
     /// If the key already exists, the previous value will be overwritten.
-    pub fn set(&mut self, key: String, value: String) {
+    pub fn set(&mut self, key: String, value: String) -> Result<()> {
         self.map.insert(key, value);
+        Ok(())
     }
 
     /// Gets the string value of a given string key.
     ///
     /// Returns `None` if the given key does not exist.
-    pub fn get(&self, key: String) -> Option<String> {
-        self.map.get(&key).cloned()
+    pub fn get(&self, key: String) -> Result<Option<String>> {
+        Ok(self.map.get(&key).cloned())
     }
 
     /// Remove a given key.
-    pub fn remove(&mut self, key: String) {
+    pub fn remove(&mut self, key: String) -> Result<()> {
         self.map.remove(&key);
+        Ok(())
     }
+
 }
